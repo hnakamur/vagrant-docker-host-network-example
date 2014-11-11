@@ -16,4 +16,5 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", path: "install_docker.sh"
   config.vm.provision "shell", path: "setup_docker_host.sh"
+  config.vm.provision "shell", path: "setup_containers.sh"
 end
