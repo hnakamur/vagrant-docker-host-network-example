@@ -42,14 +42,6 @@ EOF
   systemctl start mysql.container
 fi
 
-if [ ! -f /usr/local/sbin/enter_container ]; then
-  cat <<'EOF' > /usr/local/sbin/enter_container
-#!/bin/sh
-sudo nsenter --target $(docker inspect --format '{{.State.Pid}}' $1) --mount --uts --ipc --net --pid
-EOF
-  chmod +x /usr/local/sbin/enter_container
-fi
-
 # configure app1 container autostart
 if [ ! -f /etc/systemd/system/app1.container.service ]; then
   cat <<EOF > /etc/systemd/system/app1.container.service
