@@ -1,9 +1,8 @@
-vagrant-docker-host-network-example
-===================================
+vagrant-docker-rails-development-example
+========================================
 
-An example using Vagrant and docker.
+An example for developping rails applications using multiple rails containers and single mysql container on Vagrant and docker.
 
-- Boot a Vagrant machine with two IP addresses 192.168.33.11 and 192.168.33.12
-- Set docker in the Vagrant machine
+- Set up docker in the Vagrant machine with IP address 192.168.33.11 and 192.168.33.12
 - Docker containers uses host network
 - Run one mysql container and two rails containers
