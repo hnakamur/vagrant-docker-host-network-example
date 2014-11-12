@@ -1,4 +1,9 @@
 #!/bin/sh
+
+# set lang to english to avoid system messages to be printed in Japanese
+echo 'export LANG=en_US.utf8' >> /root/.bash_profile
+
+# install dig
 yum install -y bind-utils
 
 # configure firewall
