@@ -7,5 +7,3 @@ ADD down.sh /opt/monit/unicorn/down.sh
 
 VOLUME ["/data/app2"]
 WORKDIR "/data/app2"
-EXPOSE 2812
-CMD ["/usr/bin/monit", "-I"]
