@@ -30,8 +30,8 @@ After=docker.service
 
 [Service]
 Restart=always
-ExecStart=/usr/bin/docker start -a mysql
-ExecStop=/usr/bin/docker stop -t 10 mysql
+ExecStart=/bin/docker start -a mysql
+ExecStop=/bin/docker stop -t 10 mysql
 
 [Install]
 WantedBy=multi-user.target
@@ -47,17 +47,7 @@ if [ ! -f /usr/local/sbin/enter_container ]; then
 #!/bin/sh
 sudo nsenter --target $(docker inspect --format '{{.State.Pid}}' $1) --mount --uts --ipc --net --pid
 EOF
-  chmod +x /usr/local/bin/enter_container
-fi
-
-if [ ! -f /usr/local/sbin/delayed_start_container ]; then
-  cat <<'EOF' > /usr/local/sbin/delayed_start_container
-#!/bin/sh
-# NOTE: We need to wait till app source directories are mounted via Vagrant shared folder
-sleep 10
-/bin/docker start -a $1
-EOF
-  chmod +x /usr/local/bin/delayed_start_container
+  chmod +x /usr/local/sbin/enter_container
 fi
 
 # configure app1 container autostart
@@ -70,7 +60,8 @@ After=docker.service
 
 [Service]
 Restart=always
-ExecStart=/usr/local/sbin/delayed_start_container app1
+ExecStartPre=/bin/sh -c "while [ ! -f /vagrant/app1/src/Gemfile ]; do sleep 1; done"
+ExecStart=/bin/docker start -a app1
 ExecStop=/bin/docker stop -t 10 app1
 
 [Install]
@@ -92,7 +83,8 @@ After=docker.service
 
 [Service]
 Restart=always
-ExecStart=/usr/local/sbin/delayed_start_container app2
+ExecStartPre=/bin/sh -c "while [ ! -f /vagrant/app2/src/Gemfile ]; do sleep 1; done"
+ExecStart=/bin/docker start -a app2
 ExecStop=/bin/docker stop -t 10 app2
 
 [Install]
