@@ -5,6 +5,10 @@ if [ ! `docker images -q hnakamur/mysql` ]; then
   /vagrant/mysql/build.sh
 fi
 
+if [ ! `docker images -q hnakamur/redis` ]; then
+  /vagrant/redis/build.sh
+fi
+
 if [ ! `docker images -q hnakamur/ruby` ]; then
   /vagrant/ruby/build.sh
 fi
@@ -40,6 +44,28 @@ EOF
   systemctl enable mysql.container
   /vagrant/mysql/create.sh
   systemctl start mysql.container
+fi
+
+# configure redis container autostart
+if [ ! -f /etc/systemd/system/redis.container.service ]; then
+  cat <<EOF > /etc/systemd/system/redis.container.service
+[Unit]
+Description=MySQL container
+Author=Me
+After=docker.service
+
+[Service]
+Restart=always
+ExecStart=/bin/docker start -a redis
+ExecStop=/bin/docker stop -t 10 redis
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  systemctl daemon-reload
+  systemctl enable redis.container
+  /vagrant/redis/create.sh
+  systemctl start redis.container
 fi
 
 # configure app1 container autostart
