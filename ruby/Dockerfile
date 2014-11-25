@@ -1,7 +1,7 @@
 FROM centos:centos7
 MAINTAINER Hiroaki Nakamura <hnakamur@gmail.com>
 
-ENV RUBY_VERSION 2.1.4
+ENV RUBY_VERSION 2.1.5
 
 ADD gemrc /root/.gemrc
 
