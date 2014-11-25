@@ -1,6 +1,7 @@
 FROM hnakamur/ruby
 MAINTAINER Hiroaki Nakamura <hnakamur@gmail.com>
 
+ENV NODE_VERSION 0.10.33
 # * Uninstall fakesystemd and install systemd
 #   See http://qiita.com/yunano/items/9637ee21a71eba197345
 # * Install mysql-community-devel, mysql-community-client and ImageMagick-devel for a rails app
@@ -22,8 +23,8 @@ RUN yum swap -y fakesystemd systemd && \
     sed -i 's/use address localhost  # only accept connection from localhost.*/use address 0.0.0.0    # accept connection from any host/' /etc/monitrc && \
     systemctl enable monit && \
     cd /usr/local/src && \
-    curl -O http://nodejs.org/dist/v0.10.33/node-v0.10.33-linux-x64.tar.gz && \
-    tar xf node-v0.10.33-linux-x64.tar.gz --strip-components 1 -C /usr/local
+    curl -O http://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz && \
+    tar xf node-v${NODE_VERSION}-linux-x64.tar.gz --strip-components 1 -C /usr/local
 
 EXPOSE 2812
 CMD ["/sbin/init"]
