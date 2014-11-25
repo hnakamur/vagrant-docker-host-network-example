@@ -17,13 +17,6 @@ if [ ! `docker images -q hnakamur/rails` ]; then
   /vagrant/rails/build.sh
 fi
 
-if [ ! `docker images -q hnakamur/app1` ]; then
-  /vagrant/app1/build.sh
-fi
-if [ ! `docker images -q hnakamur/app2` ]; then
-  /vagrant/app2/build.sh
-fi
-
 # configure mysql container autostart
 if [ ! -f /etc/systemd/system/mysql.container.service ]; then
   cat <<EOF > /etc/systemd/system/mysql.container.service

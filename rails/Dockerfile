@@ -23,5 +23,8 @@ ADD supervisord.conf /etc/supervisord.conf
 ADD unicorn.conf /etc/supervisor.d/unicorn.conf
 ADD reload_unicorn /usr/local/sbin/reload_unicorn
 
+VOLUME ["/data/app"]
+WORKDIR "/data/app"
+
 ENTRYPOINT ["/bin/supervisord"]
 CMD ["-n", "-c", "/etc/supervisord.conf"]
