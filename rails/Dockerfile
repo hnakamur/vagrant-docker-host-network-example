@@ -2,29 +2,26 @@ FROM hnakamur/ruby
 MAINTAINER Hiroaki Nakamura <hnakamur@gmail.com>
 
 ENV NODE_VERSION 0.10.33
-# * Uninstall fakesystemd and install systemd
-#   See http://qiita.com/yunano/items/9637ee21a71eba197345
+
 # * Install mysql-community-devel, mysql-community-client and ImageMagick-devel for a rails app
-# * Install monit
+# * Install python-devel for installing supervisor
 # * Install node.js for asset pipeline
+# * Install supervisord and unicornherder
 
-# NOTE: Disable mirrorlist and enable baseurl in epel.repo to avoid the error below.
-#
-# Loaded plugins: fastestmirror
-# http://ftp.kddilabs.jp/Linux/packages/fedora/epel/7/x86_64/repodata/repomd.xml: [Errno -1] repomd.xml does not match metalink for epel
-# Trying other mirror.
-
-RUN yum swap -y fakesystemd systemd && \
-    yum install -y http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm && \
-    yum install -y mysql-community-devel mysql-community-client ImageMagick-devel epel-release && \
-    sed -i.bak -e 's/^#baseurl=/baseurl=/;s/^mirrorlist=/#&/' /etc/yum.repos.d/epel.repo && \
-    yum install -y monit && \
+RUN yum install -y http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm && \
+    yum install -y mysql-community-devel mysql-community-client ImageMagick-devel \
+                   python-devel && \
     yum clean all && \
-    sed -i 's/use address localhost  # only accept connection from localhost.*/use address 0.0.0.0    # accept connection from any host/' /etc/monitrc && \
-    systemctl enable monit && \
     cd /usr/local/src && \
     curl -O http://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz && \
-    tar xf node-v${NODE_VERSION}-linux-x64.tar.gz --strip-components 1 -C /usr/local
+    tar xf node-v${NODE_VERSION}-linux-x64.tar.gz --strip-components 1 -C /usr/local && \
+    curl -kL https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python && \
+    pip install supervisor && \
+    pip install git+https://github.com/kazuph/unicornherder.git
 
-EXPOSE 2812
-CMD ["/sbin/init"]
+ADD supervisord.conf /etc/supervisord.conf
+ADD unicorn.conf /etc/supervisor.d/unicorn.conf
+ADD reload_unicorn /usr/local/sbin/reload_unicorn
+
+ENTRYPOINT ["/bin/supervisord"]
+CMD ["-n", "-c", "/etc/supervisord.conf"]

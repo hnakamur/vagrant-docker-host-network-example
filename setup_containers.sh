@@ -78,7 +78,6 @@ After=docker.service
 
 [Service]
 Restart=always
-ExecStartPre=/bin/sh -c "while [ ! -f /vagrant/app1/src/Gemfile ]; do sleep 1; done"
 ExecStart=/bin/docker start -a app1
 ExecStop=/bin/docker stop -t 10 app1
 
@@ -101,7 +100,6 @@ After=docker.service
 
 [Service]
 Restart=always
-ExecStartPre=/bin/sh -c "while [ ! -f /vagrant/app2/src/Gemfile ]; do sleep 1; done"
 ExecStart=/bin/docker start -a app2
 ExecStop=/bin/docker stop -t 10 app2
 
