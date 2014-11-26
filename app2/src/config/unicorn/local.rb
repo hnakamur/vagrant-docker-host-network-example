@@ -8,8 +8,8 @@ working_directory APP_DIR
 # user USER, GROUP
 
 listen 3000, :tcp_nopush => true
-listen "/var/run/unicorn.sock"
-pid "/var/run/unicorn.pid"
+#listen "/var/run/unicorn.sock"
+pid "#{APP_DIR}/tmp/pids/unicorn.pid"
 
 timeout 60
 preload_app true

@@ -17,7 +17,10 @@ RUN yum install -y http://dev.mysql.com/get/mysql-community-release-el7-5.noarch
     tar xf node-v${NODE_VERSION}-linux-x64.tar.gz --strip-components 1 -C /usr/local && \
     curl -kL https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python && \
     pip install supervisor && \
-    pip install git+https://github.com/kazuph/unicornherder.git
+    pip install git+https://github.com/kazuph/unicornherder.git && \
+    useradd app && \
+    mkdir -p /var/app && \
+    chown app: /var/app
 
 ADD supervisord.conf /etc/supervisord.conf
 ADD unicorn.conf /etc/supervisor.d/unicorn.conf
